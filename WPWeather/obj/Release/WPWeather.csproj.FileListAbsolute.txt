@@ -1,0 +1,17 @@
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\bin\Release\WPWeather.exe.config
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\bin\Release\WPWeather.exe
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\bin\Release\WPWeather.pdb
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\bin\Release\Newtonsoft.Json.dll
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\bin\Release\Newtonsoft.Json.pdb
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\bin\Release\Newtonsoft.Json.xml
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\MainWindow.g.cs
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\App.g.cs
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\WPWeather_MarkupCompile.cache
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\WPWeather_MarkupCompile.lref
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\MainWindow.baml
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\WPWeather.g.resources
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\WPWeather.Properties.Resources.resources
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\WPWeather.csproj.GenerateResource.Cache
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\WPWeather.csproj.CoreCompileInputs.cache
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\WPWeather.exe
+C:\Users\VukasinPetrovic\Desktop\WPWeather\WPWeather\obj\Release\WPWeather.pdb

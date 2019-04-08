@@ -2,8 +2,11 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:WPWeather"
+             xmlns:viewmodels="clr-namespace:WPWeather.ViewModels"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <viewmodels:MainWindowViewModel x:Key="MainWindowViewModel" />
+        <viewmodels:HomepageViewModel x:Key="HomepageViewModel" />
+        <viewmodels:WeatherViewModel x:Key="WeatherViewModel" />
     </Application.Resources>
 </Application>

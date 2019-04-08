@@ -3,12 +3,141 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:local="clr-namespace:WPWeather"
+        xmlns:views="clr-namespace:WPWeather.Views"
+        xmlns:viewmodels="clr-namespace:WPWeather.ViewModels"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        <Button Content="Button" HorizontalAlignment="Right" Margin="0,10,403.4,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <TextBlock Name="Perica" HorizontalAlignment="Left" Margin="40,46,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Height="251" Width="452"/>
-
+        DataContext="{StaticResource MainWindowViewModel}"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewmodels:HomepageViewModel}">
+            <views:HomepageView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewmodels:WeatherViewModel}">
+            <views:WeatherView/>
+        </DataTemplate>
+        <!-- This style is used for buttons, to remove the WPF default 'animated' mouse over effect -->
+        <Style x:Key="NoHoverButtonStyle" TargetType="Button">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <!--Setter TargetName="border" Property="BorderBrush" Value="Black" /-->
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Background="#0d47a1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.1*"/>
+            <RowDefinition Height="0.8*"/>
+            <RowDefinition Height="0.1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.2*"/>
+            <ColumnDefinition Width="0.8*"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0"
+               Grid.Column="0"
+               Content="&#128278; Bookmarks"
+               FontFamily="Segoe UI Light"
+               FontSize="20"
+               Foreground="White"
+               HorizontalAlignment="Center"
+               VerticalContentAlignment="Center"/>
+        <ListView Grid.Row="1"
+                 Grid.Column="0"
+                 FontFamily="Segoe UI Light"
+                 FontSize="12"
+                 HorizontalContentAlignment="Stretch"
+                 VerticalContentAlignment="Top"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 Background="Transparent"
+                 Foreground="Yellow"
+                 BorderThickness="0"
+                 ItemsSource="{Binding Bookmarks}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="{Binding CityName}" FontFamily="Segoe UI Light" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Button Grid.Column="1" Width="20" Content="X" FontFamily="Segoe UI Light" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5" Command="{Binding CmdDeleteBookmark}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Line   Grid.Column="0"
+                Grid.Row="0"
+                Grid.RowSpan="3"
+                Stretch="Fill" 
+                Y1="1"
+                Y2="100"
+                Stroke="White"
+                StrokeThickness="1"
+                HorizontalAlignment="Right">
+        </Line>
+        <Grid Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.01*"/>
+                <ColumnDefinition Width="0.1*"/>
+                <ColumnDefinition Width="0.9*"/>
+                <ColumnDefinition Width="0.15*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="1"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Content="City:"
+                   FontFamily="Segoe UI Light"
+                   FontSize="16"
+                   Foreground="White"/>
+            <ComboBox Grid.Row="0"
+                      Grid.Column="2"
+                      HorizontalAlignment="Stretch" 
+                      VerticalAlignment="Center"
+                      SelectedItem="{Binding SelectedCity}"
+                      ItemsSource="{Binding Cities}"
+                      FontFamily="Segoe UI Light"
+                      IsEditable="True">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding CmdChangedCity}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+            <Button Grid.Column="3"
+                    Content="{Binding BookmarkIcon}"
+                    FontSize="24"
+                    Foreground="White"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Style="{StaticResource NoHoverButtonStyle}"
+                    Command="{Binding CmdBookmark}"/>
+        </Grid>
+        <Grid Grid.Row="1"
+              Grid.Column="1"
+              Grid.RowSpan="2">
+            <ContentControl Content="{Binding Content}"/>
+        </Grid>
+        <Label Grid.Row="2"
+               Grid.Column="0"
+               Content="Vukašin Petrović Ltd. © 2019"
+               Foreground="White"
+               FontFamily="Segoe UI Light"
+               FontSize="11"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
     </Grid>
 </Window>
