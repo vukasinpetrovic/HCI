@@ -16,7 +16,7 @@ namespace WPWeather
             try
             {
                 var client = new WebClient();
-                var response = client.DownloadString("http://api.openweathermap.org/data/2.5/forecast?id=" + cityID + API_KEY);
+                var response = client.DownloadString("http://api.openweathermap.org/data/2.5/forecast?id=" + cityID + "&units=metric" + API_KEY);
 
                 return JsonConvert.DeserializeObject<WeatherDataWrapper>(response);
             }
@@ -32,7 +32,7 @@ namespace WPWeather
             try
             {
                 var client = new WebClient();
-                var response = client.DownloadString("http://api.openweathermap.org/data/2.5/forecast?q=" + city + API_KEY);
+                var response = client.DownloadString("http://api.openweathermap.org/data/2.5/forecast?q=" + "&units=metric" + city + API_KEY);
 
                 return JsonConvert.DeserializeObject<WeatherDataWrapper>(response);
             }
@@ -48,7 +48,7 @@ namespace WPWeather
             try
             {
                 var client = new WebClient();
-                var response = client.DownloadString("http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + API_KEY);
+                var response = client.DownloadString("http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&units=metric" + API_KEY);
 
                 return JsonConvert.DeserializeObject<WeatherDataWrapper>(response);
             }
@@ -64,7 +64,7 @@ namespace WPWeather
             try
             {
                 var client = new WebClient();
-                var response = client.DownloadString("http://api.openweathermap.org/data/2.5/forecast/hourly?id=" + cityID + API_KEY);
+                var response = client.DownloadString("http://api.openweathermap.org/data/2.5/forecast/hourly?id=" + cityID + "&units=metric" + API_KEY);
 
                 return JsonConvert.DeserializeObject<WeatherDataWrapper>(response);
             }

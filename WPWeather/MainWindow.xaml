@@ -71,7 +71,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="{Binding CityName}" FontFamily="Segoe UI Light" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Label Grid.Column="0" Content="{Binding City.name}" FontFamily="Segoe UI Light" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         <Button Grid.Column="1" Width="20" Content="X" FontFamily="Segoe UI Light" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5" Command="{Binding CmdDeleteBookmark}"/>
                     </Grid>
                 </DataTemplate>
@@ -106,9 +106,14 @@
                       HorizontalAlignment="Stretch" 
                       VerticalAlignment="Center"
                       SelectedItem="{Binding SelectedCity}"
-                      ItemsSource="{Binding Cities}"
+                      ItemsSource="{Binding AllCities}"
                       FontFamily="Segoe UI Light"
                       IsEditable="True">
+                <ComboBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ComboBox.ItemsPanel>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding CmdChangedCity}" />

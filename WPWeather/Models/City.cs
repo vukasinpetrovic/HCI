@@ -11,5 +11,11 @@
         public Coordinates coord { get; set; }
 
         public int population { get; set; }
+
+        override
+        public string ToString()
+        {
+            return this.name + ", " + this.country;
+        }
     }
 }

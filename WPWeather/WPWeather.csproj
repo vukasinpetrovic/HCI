@@ -76,7 +76,6 @@
     <Compile Include="Models\Wind.cs" />
     <Compile Include="Other\Data.cs" />
     <Compile Include="Other\RelayCommand.cs" />
-    <Compile Include="ServiceClasses.cs" />
     <Compile Include="Models\WeatherDataWrapper.cs" />
     <Compile Include="ViewModels\DayViewModel.cs" />
     <Compile Include="ViewModels\HomepageViewModel.cs" />

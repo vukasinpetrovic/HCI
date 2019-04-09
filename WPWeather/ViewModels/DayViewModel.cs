@@ -13,13 +13,12 @@ namespace WPWeather.ViewModels
         public string Temperature { get; set; }
         public string TypeOfDay { get; set; }
 
-
         public DayViewModel()
         {
-            DayOfTheWeek = "Monday";
-            TypeOfDayImagePath = "pack://application:,,,/Images/cloudy.png";
-            Temperature = "16 C";
-            TypeOfDay = "Cloudy";
+            //DayOfTheWeek = "Monday";
+            //TypeOfDayImagePath = "pack://application:,,,/Images/cloudy.png";
+            //Temperature = "16 C";
+            //TypeOfDay = "Cloudy";
         }
     }
 }

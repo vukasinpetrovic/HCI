@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,16 +24,9 @@ namespace WPWeather.ViewModels
             }
         }
 
-        public ObservableCollection<string> Cities { get; set; } = new ObservableCollection<string>()
-        {
-            "Novi Sad, Serbia",
-            "Belgrade, Serbia",
-            "Montreal, Canada",
-            "Zagreb, Croatia",
-            "London, UK"
-        };
+        public ObservableCollection<City> AllCities { get; set; } = new ObservableCollection<City>();
 
-        public string SelectedCity
+        public City SelectedCity
         {
             get
             {
@@ -47,14 +42,7 @@ namespace WPWeather.ViewModels
 
         public RelayCommand CmdChangedCity { get; set; }
 
-        public BindingList<Bookmark> Bookmarks { get; } = new BindingList<Bookmark>()
-        {
-            new Bookmark("Novi Sad, Serbia"),
-            new Bookmark("Belgrade, Serbia"),
-            new Bookmark("Montreal, Canada"),
-            new Bookmark("Zagreb, Croatia"),
-            new Bookmark("London, UK")
-        };
+        public BindingList<Bookmark> Bookmarks { get; set; } = new BindingList<Bookmark>();
 
         public RelayCommand CmdBookmark { get; set; }
 
@@ -76,19 +64,32 @@ namespace WPWeather.ViewModels
         {
             Content = _hvm;
 
-            SelectedCity = "";
-
+            SelectedCity = null;
 
             CmdChangedCity = new RelayCommand(ChangedCity);
 
             Bookmarks.ListChanged += BookmarksChanged;
             CmdBookmark = new RelayCommand(Bookmark);
+
+            using (StreamReader file = File.OpenText(Directory.GetCurrentDirectory()  + "/city.list.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                AllCities = (ObservableCollection<City>)serializer.Deserialize(file, typeof(ObservableCollection<City>));
+            }
         }
 
         private void ChangedCity()
         {
-            if (SelectedCity != null && SelectedCity != string.Empty)
+            if (SelectedCity != null)
             {
+                WeatherDataWrapper weatherData = WeatherService.get5DayForecastByCityID(SelectedCity.id.ToString());
+
+                DayViewModel dw = new DayViewModel();
+                dw.Temperature = weatherData.list[0].main.temp.ToString();
+                dw.DayOfTheWeek = new DateTime(weatherData.list[0].dt).DayOfWeek.ToString();
+                dw.TypeOfDay = weatherData.list[0].weather[0].description;
+
+                _wvm.SelectedDayViewModel = dw;
                 Content = _wvm;
             }
             else
@@ -99,12 +100,12 @@ namespace WPWeather.ViewModels
 
         private void Bookmark()
         {
-            if (SelectedCity != null && SelectedCity != string.Empty)
+            if (SelectedCity != null)
             {
                 bool removed = false;
                 foreach (Bookmark b in Bookmarks)
                 {
-                    if (b.CityName.Equals(SelectedCity))
+                    if (b.City.id == SelectedCity.id)
                     {
                         Bookmarks.Remove(b);
                         OnPropertyChanged("Bookmarks");
@@ -128,7 +129,7 @@ namespace WPWeather.ViewModels
             bool bookmarked = false;
             foreach (Bookmark b in Bookmarks)
             {
-                if (b.CityName.Equals(_selectedCity))
+                if (b.City.id == _selectedCity.id)
                 {
                     BookmarkIcon = "\u2605";
                     bookmarked = true;
@@ -141,19 +142,27 @@ namespace WPWeather.ViewModels
 
         private void BookmarksChanged(object sender, ListChangedEventArgs e)
         {
+            bool removed = false;
             for (int i = 0; i < Bookmarks.Count; ++i)
             {
                 if (!Bookmarks[i].Active)
                 {
+                    Bookmarks.ListChanged -= BookmarksChanged;
+                    removed = true;
                     Bookmarks.RemoveAt(i);
-                    OnPropertyChanged("Bookmarks");
-                    CheckBookmarkIcon();
                     --i;
                 }
             }
+
+            if (removed)
+            {
+                OnPropertyChanged("Bookmarks");
+                CheckBookmarkIcon();
+                Bookmarks.ListChanged += BookmarksChanged;
+            }
         }
 
-        private string _selectedCity = "";
+        private City _selectedCity = null;
         private string _bookmarkIcon = "";
 
         private object _content;

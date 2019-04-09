@@ -9,14 +9,14 @@ namespace WPWeather.Models
 {
     public class Bookmark : Data
     {
-        public string CityName { get; set; }
+        public City City { get; set; }
         public bool Active { get; set; }
         public RelayCommand CmdDeleteBookmark { get; set; }
 
-        public Bookmark(string cityName)
+        public Bookmark(City city)
         {
             Active = true;
-            CityName = cityName;
+            City = city;
             CmdDeleteBookmark = new RelayCommand(DeleteBookmark);
         }
 
