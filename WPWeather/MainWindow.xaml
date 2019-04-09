@@ -9,7 +9,7 @@
         xmlns:viewmodels="clr-namespace:WPWeather.ViewModels"
         mc:Ignorable="d"
         DataContext="{StaticResource MainWindowViewModel}"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Width="1024" Height="576">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewmodels:HomepageViewModel}">
             <views:HomepageView/>
@@ -63,7 +63,13 @@
                  Background="Transparent"
                  Foreground="Yellow"
                  BorderThickness="0"
-                 ItemsSource="{Binding Bookmarks}">
+                 ItemsSource="{Binding Bookmarks}"
+                 SelectedItem="{Binding SelectedBookmark}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectedItemChanged">
+                    <i:InvokeCommandAction Command="{Binding SelectedItemChangedCommand}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -71,7 +77,7 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Content="{Binding City.name}" FontFamily="Segoe UI Light" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Label Grid.Column="0" Content="{Binding City}" FontFamily="Segoe UI Light" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         <Button Grid.Column="1" Width="20" Content="X" FontFamily="Segoe UI Light" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5" Command="{Binding CmdDeleteBookmark}"/>
                     </Grid>
                 </DataTemplate>

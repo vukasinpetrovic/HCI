@@ -13,8 +13,14 @@ namespace WPWeather.Other
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            try
+            {
+                PropertyChangedEventHandler handler = PropertyChanged;
+                if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            } catch (Exception e)
+            {
+                
+            }
         }
 
         protected bool SetField<T>(ref T field, T value, string propertyName)

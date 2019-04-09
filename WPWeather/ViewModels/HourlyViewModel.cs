@@ -14,7 +14,7 @@ namespace WPWeather.ViewModels
 
         public HourlyViewModel()
         {
-            //HourlyWeather = new ObservableCollection<HourWeather>();
+            HourlyWeather = new ObservableCollection<HourWeather>();
 
             //HourlyWeather.Add(new HourWeather());
             //HourlyWeather.Add(new HourWeather());

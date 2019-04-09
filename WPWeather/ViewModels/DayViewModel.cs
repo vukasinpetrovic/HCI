@@ -3,15 +3,73 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPWeather.Other;
 
 namespace WPWeather.ViewModels
 {
-    public class DayViewModel
+    public class DayViewModel : Data
     {
-        public string DayOfTheWeek { get; set; }
-        public string TypeOfDayImagePath { get; set; }
-        public string Temperature { get; set; }
-        public string TypeOfDay { get; set; }
+        private string _dayOfTheWeek { get; set; }
+        private string _typeOfDayImagePath { get; set; }
+        private string _temperature { get; set; }
+        private string _typeOfDay { get; set; }
+
+        public DateTime date { get; set; }
+
+        public string DayOfTheWeek {
+            get
+            {
+                return _dayOfTheWeek;
+            }
+
+            set
+            {
+                _dayOfTheWeek = value;
+                OnPropertyChanged("DayOfTheWeek");
+            }
+        }
+
+        public string TypeOfDayImagePath
+        {
+            get
+            {
+                return _typeOfDayImagePath;
+            }
+
+            set
+            {
+                _typeOfDayImagePath = value;
+                OnPropertyChanged("TypeOfDayImagePath");
+            }
+        }
+
+        public string Temperature
+        {
+            get
+            {
+                return _temperature;
+            }
+
+            set
+            {
+                _temperature = value;
+                OnPropertyChanged("Temperature");
+            }
+        }
+
+        public string TypeOfDay
+        {
+            get
+            {
+                return _typeOfDay;
+            }
+
+            set
+            {
+                _typeOfDay = value;
+                OnPropertyChanged("TypeOfDay");
+            }
+        }
 
         public DayViewModel()
         {

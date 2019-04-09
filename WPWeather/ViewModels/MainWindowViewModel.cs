@@ -36,11 +36,27 @@ namespace WPWeather.ViewModels
             set
             {
                 _selectedCity = value;
+                OnPropertyChanged("SelectedCity");
                 CheckBookmarkIcon();
             }
         }
 
+        private Bookmark _selectedBookmark { get; set; }
+        public Bookmark SelectedBookmark {
+            get
+            {
+                return _selectedBookmark;
+            }
+
+            set {
+                _selectedBookmark = value;
+                OnListItemClick();
+            }
+        }
+
         public RelayCommand CmdChangedCity { get; set; }
+
+        public RelayCommand SelectedItemChangedCommand { get; set; }
 
         public BindingList<Bookmark> Bookmarks { get; set; } = new BindingList<Bookmark>();
 
@@ -68,6 +84,8 @@ namespace WPWeather.ViewModels
 
             CmdChangedCity = new RelayCommand(ChangedCity);
 
+            SelectedItemChangedCommand = new RelayCommand(OnListItemClick);
+
             Bookmarks.ListChanged += BookmarksChanged;
             CmdBookmark = new RelayCommand(Bookmark);
 
@@ -78,19 +96,183 @@ namespace WPWeather.ViewModels
             }
         }
 
+        private void OnListItemClick()
+        {
+            SelectedCity = SelectedBookmark.City;
+
+            ChangedCity();
+        }
+
+        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dtDateTime;
+        }
+
         private void ChangedCity()
         {
             if (SelectedCity != null)
             {
                 WeatherDataWrapper weatherData = WeatherService.get5DayForecastByCityID(SelectedCity.id.ToString());
 
-                DayViewModel dw = new DayViewModel();
-                dw.Temperature = weatherData.list[0].main.temp.ToString();
-                dw.DayOfTheWeek = new DateTime(weatherData.list[0].dt).DayOfWeek.ToString();
-                dw.TypeOfDay = weatherData.list[0].weather[0].description;
+                DateTime today = DateTime.Now;
 
-                _wvm.SelectedDayViewModel = dw;
+                //DayViewModel dw = new DayViewModel();
+                _wvm.SelectedHourlyViewModel = new HourlyViewModel();
+                _wvm.SelectedDayViewModel = new DayViewModel();
+                _wvm.SelectedDayViewModel.Temperature = weatherData.list[0].main.temp.ToString() + " °C";
+                _wvm.SelectedDayViewModel.DayOfTheWeek = new DateTime(weatherData.list[0].dt).AddDays(1).DayOfWeek.ToString();
+                _wvm.SelectedDayViewModel.TypeOfDay = weatherData.list[0].weather[0].description;
+                _wvm.SelectedDayViewModel.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[0].weather[0].icon + ".png";
+
+                for (int i = 0; i < weatherData.list.Count; i++)
+                {
+                    WeatherData wd = weatherData.list[i];
+                    DateTime dt = UnixTimeStampToDateTime(wd.dt);
+                    if (today.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
+                    {
+                        HourWeather hw = new HourWeather();
+                        hw.Hour = dt.ToString("HH:mm");
+                        hw.Temperature = wd.main.temp.ToString() + " °C";
+                        hw.TypeOfDay = wd.weather[0].description;
+                        hw.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + wd.weather[0].icon + ".png";
+                        _wvm.SelectedHourlyViewModel.HourlyWeather.Add(hw);
+                    }
+                }
+
+
+                /* -------------- DAY 1 -------------- */
+                double temp = 0;
+                int tempCount = 0;
+
+                DayViewModel day1 = new DayViewModel();
+                day1.date = DateTime.Now;
+                day1.DayOfTheWeek = day1.date.DayOfWeek.ToString();
+                for (int i = 0; i < weatherData.list.Count; i++)
+                {
+                    WeatherData wd = weatherData.list[i];
+                    DateTime dt = UnixTimeStampToDateTime(wd.dt);
+                    if (day1.date.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
+                    {
+                        temp += wd.main.temp_max;
+                        tempCount += 1;
+                    }
+                    else if (day1.date.CompareTo(dt) == -1)
+                    {
+                        day1.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[i - (tempCount / 2)].weather[0].icon + ".png";
+                        break;
+                    }
+                }
+                day1.Temperature = String.Format("{0:00.0} °C", (temp / tempCount));
+
+
+                /* -------------- DAY 2 -------------- */
+                temp = 0;
+                tempCount = 0;
+
+                DayViewModel day2 = new DayViewModel();
+                day2.date = DateTime.Now.AddDays(1);
+                day2.DayOfTheWeek = day2.date.DayOfWeek.ToString();
+                for (int i = 0; i < weatherData.list.Count; i++)
+                {
+                    WeatherData wd = weatherData.list[i];
+                    DateTime dt = UnixTimeStampToDateTime(wd.dt);
+                    if (day2.date.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
+                    {
+                        temp += wd.main.temp_max;
+                        tempCount += 1;
+                    }
+                    else if (day2.date.CompareTo(dt) == -1)
+                    {
+                        day2.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[i - (tempCount / 2)].weather[0].icon + ".png";
+                        break;
+                    }
+                }
+                day2.Temperature = String.Format("{0:00.0} °C", (temp / tempCount));
+
+                /* -------------- DAY 3 -------------- */
+                temp = 0;
+                tempCount = 0;
+
+                DayViewModel day3 = new DayViewModel();
+                day3.date = DateTime.Now.AddDays(2);
+                day3.DayOfTheWeek = day3.date.DayOfWeek.ToString();
+                for (int i = 0; i < weatherData.list.Count; i++)
+                {
+                    WeatherData wd = weatherData.list[i];
+                    DateTime dt = UnixTimeStampToDateTime(wd.dt);
+                    if (day3.date.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
+                    {
+                        temp += wd.main.temp_max;
+                        tempCount += 1;
+                    }
+                    else if (day3.date.CompareTo(dt) == -1)
+                    {
+                        day3.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[i - (tempCount / 2)].weather[0].icon + ".png";
+                        break;
+                    }
+                }
+                day3.Temperature = String.Format("{0:00.0} °C", (temp / tempCount));
+
+                /* -------------- DAY 4 -------------- */
+                temp = 0;
+                tempCount = 0;
+
+                DayViewModel day4 = new DayViewModel();
+                day4.date = DateTime.Now.AddDays(3);
+                day4.DayOfTheWeek = day4.date.DayOfWeek.ToString();
+                for (int i = 0; i < weatherData.list.Count; i++)
+                {
+                    WeatherData wd = weatherData.list[i];
+                    DateTime dt = UnixTimeStampToDateTime(wd.dt);
+                    if (day4.date.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
+                    {
+                        temp += wd.main.temp_max;
+                        tempCount += 1;
+                    }
+                    else if (day4.date.CompareTo(dt) == -1)
+                    {
+                        day4.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[i - (tempCount / 2)].weather[0].icon + ".png";
+                        break;
+                    }
+                }
+                day4.Temperature = String.Format("{0:00.0} °C", (temp / tempCount));
+
+                /* -------------- DAY 4 -------------- */
+                temp = 0;
+                tempCount = 0;
+
+                DayViewModel day5 = new DayViewModel();
+                day5.date = DateTime.Now.AddDays(4);
+                day5.DayOfTheWeek = day5.date.DayOfWeek.ToString();
+                for (int i = 0; i < weatherData.list.Count; i++)
+                {
+                    WeatherData wd = weatherData.list[i];
+                    DateTime dt = UnixTimeStampToDateTime(wd.dt);
+                    if (day5.date.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
+                    {
+                        temp += wd.main.temp_max;
+                        tempCount += 1;
+                    }
+                    else if (day5.date.CompareTo(dt) == -1)
+                    {
+                        day5.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[i - (tempCount / 2)].weather[0].icon + ".png";
+                        break;
+                    }
+                }
+                day5.Temperature = String.Format("{0:00.0} °C", (temp / tempCount));
+
+                _wvm.DayViewModels[0] = day1;
+                _wvm.DayViewModels[1] = day2;
+                _wvm.DayViewModels[2] = day3;
+                _wvm.DayViewModels[3] = day4;
+                _wvm.DayViewModels[4] = day5;
+
+
                 Content = _wvm;
+                //_wvm.SelectedDayViewModel = dw;
             }
             else
             {
@@ -142,23 +324,15 @@ namespace WPWeather.ViewModels
 
         private void BookmarksChanged(object sender, ListChangedEventArgs e)
         {
-            bool removed = false;
             for (int i = 0; i < Bookmarks.Count; ++i)
             {
                 if (!Bookmarks[i].Active)
                 {
-                    Bookmarks.ListChanged -= BookmarksChanged;
-                    removed = true;
                     Bookmarks.RemoveAt(i);
-                    --i;
+                    OnPropertyChanged("Bookmarks");
+                    CheckBookmarkIcon();
+                    return;
                 }
-            }
-
-            if (removed)
-            {
-                OnPropertyChanged("Bookmarks");
-                CheckBookmarkIcon();
-                Bookmarks.ListChanged += BookmarksChanged;
             }
         }
 
@@ -166,7 +340,7 @@ namespace WPWeather.ViewModels
         private string _bookmarkIcon = "";
 
         private object _content;
-        private HomepageViewModel _hvm = new HomepageViewModel();
-        private WeatherViewModel _wvm = new WeatherViewModel();
+        private HomepageViewModel _hvm = App.Current.Resources["HomepageViewModel"] as HomepageViewModel;
+        private WeatherViewModel _wvm = App.Current.Resources["WeatherViewModel"] as WeatherViewModel;
     }
 }
