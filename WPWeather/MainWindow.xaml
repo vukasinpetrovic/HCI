@@ -98,6 +98,7 @@
                 <ColumnDefinition Width="0.01*"/>
                 <ColumnDefinition Width="0.1*"/>
                 <ColumnDefinition Width="0.9*"/>
+                <ColumnDefinition Width="0.1*"/>
                 <ColumnDefinition Width="0.15*"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Column="1"
@@ -126,7 +127,19 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
+            
             <Button Grid.Column="3"
+                    Content="&#11216;"
+                    FontSize="24"
+                    Foreground="White"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Style="{StaticResource NoHoverButtonStyle}"
+                    Command="{Binding CmdLocation}"/>
+            
+            <Button Grid.Column="4"
                     Content="{Binding BookmarkIcon}"
                     FontSize="24"
                     Foreground="White"

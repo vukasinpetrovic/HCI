@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Device.Location;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WPWeather.Models;
 using WPWeather.Other;
 
@@ -16,6 +18,8 @@ namespace WPWeather.ViewModels
     public class MainWindowViewModel : Data
     {
         public static WeatherDataWrapper weatherData;
+        public static double? my_location_lon = null;
+        public static double? my_location_lat = null;
 
         public object Content
         {
@@ -64,6 +68,8 @@ namespace WPWeather.ViewModels
 
         public RelayCommand CmdBookmark { get; set; }
 
+        public RelayCommand CmdLocation { get; set; }
+
         public string BookmarkIcon
         {
             get
@@ -90,12 +96,44 @@ namespace WPWeather.ViewModels
 
             Bookmarks.ListChanged += BookmarksChanged;
             CmdBookmark = new RelayCommand(Bookmark);
+            CmdLocation = new RelayCommand(LoadWeatherForMyLocation);
 
             using (StreamReader file = File.OpenText(Directory.GetCurrentDirectory()  + "/city.list.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 AllCities = (ObservableCollection<City>)serializer.Deserialize(file, typeof(ObservableCollection<City>));
             }
+
+            GeoCoordinateWatcher watcher = new GeoCoordinateWatcher();
+            watcher.PositionChanged += watcher_PositionChanged;
+            watcher.Start();
+        }
+
+        private void LoadWeatherForMyLocation()
+        {
+            if (my_location_lon != null && my_location_lat != null)
+            {
+                weatherData = WeatherService.get5DayForecastByCityLocation(my_location_lat.GetValueOrDefault(), my_location_lon.GetValueOrDefault());
+                for (int i = 0; i < AllCities.Count(); i++)
+                {
+                    if (AllCities[i].id == weatherData.city.id)
+                    {
+                        SelectedCity = AllCities[i];
+                        ChangedCity();
+                        break;
+                    }
+                }
+            } 
+            else
+            {
+                MessageBox.Show("Nije moguce pronaci vasu lokaciju, nije do nas, windows glupi...", "Obaveštenje", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+        {
+            my_location_lat = e.Position.Location.Latitude;
+            my_location_lon = e.Position.Location.Longitude;
         }
 
         private void OnListItemClick()
@@ -271,12 +309,7 @@ namespace WPWeather.ViewModels
                 }
                 day5.Temperature = String.Format("avg. {0:00.0} °C", (temp / tempCount));
 
-                _wvm.DayViewModels[0] = day1;
-                _wvm.DayViewModels[1] = day2;
-                _wvm.DayViewModels[2] = day3;
-                _wvm.DayViewModels[3] = day4;
-                _wvm.DayViewModels[4] = day5;
-
+                _wvm.DayViewModels = new DayViewModel[5] { day1, day2, day3, day4, day5 };
 
                 Content = _wvm;
                 //_wvm.SelectedDayViewModel = dw;
