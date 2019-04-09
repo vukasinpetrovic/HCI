@@ -78,5 +78,14 @@ namespace WPWeather.ViewModels
             //Temperature = "16 C";
             //TypeOfDay = "Cloudy";
         }
+
+        public DayViewModel(string dayOfTheWeek, string typeOfDayImagePath, string temperature, string typeOfDay, DateTime date)
+        {
+            _dayOfTheWeek = dayOfTheWeek;
+            _typeOfDayImagePath = typeOfDayImagePath;
+            _temperature = temperature;
+            _typeOfDay = typeOfDay;
+            this.date = date;
+        }
     }
 }

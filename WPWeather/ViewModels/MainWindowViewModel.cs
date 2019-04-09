@@ -15,6 +15,8 @@ namespace WPWeather.ViewModels
 {
     public class MainWindowViewModel : Data
     {
+        public static WeatherDataWrapper weatherData;
+
         public object Content
         {
             get { return _content; }
@@ -115,7 +117,7 @@ namespace WPWeather.ViewModels
         {
             if (SelectedCity != null)
             {
-                WeatherDataWrapper weatherData = WeatherService.get5DayForecastByCityID(SelectedCity.id.ToString());
+                weatherData = WeatherService.get5DayForecastByCityID(SelectedCity.id.ToString());
 
                 DateTime today = DateTime.Now;
 
@@ -156,16 +158,17 @@ namespace WPWeather.ViewModels
                     DateTime dt = UnixTimeStampToDateTime(wd.dt);
                     if (day1.date.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
                     {
-                        temp += wd.main.temp_max;
+                        temp += wd.main.temp;
                         tempCount += 1;
                     }
                     else if (day1.date.CompareTo(dt) == -1)
                     {
+                        day1.TypeOfDay = weatherData.list[i - (tempCount / 2)].weather[0].description;
                         day1.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[i - (tempCount / 2)].weather[0].icon + ".png";
                         break;
                     }
                 }
-                day1.Temperature = String.Format("{0:00.0} °C", (temp / tempCount));
+                day1.Temperature = String.Format("avg. {0:00.0} °C", tempCount == 0 ? weatherData.list[0].main.temp : (temp / tempCount));
 
 
                 /* -------------- DAY 2 -------------- */
@@ -181,16 +184,17 @@ namespace WPWeather.ViewModels
                     DateTime dt = UnixTimeStampToDateTime(wd.dt);
                     if (day2.date.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
                     {
-                        temp += wd.main.temp_max;
+                        temp += wd.main.temp;
                         tempCount += 1;
                     }
                     else if (day2.date.CompareTo(dt) == -1)
                     {
+                        day2.TypeOfDay = weatherData.list[i - (tempCount / 2)].weather[0].description;
                         day2.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[i - (tempCount / 2)].weather[0].icon + ".png";
                         break;
                     }
                 }
-                day2.Temperature = String.Format("{0:00.0} °C", (temp / tempCount));
+                day2.Temperature = String.Format("avg. {0:00.0} °C", (temp / tempCount));
 
                 /* -------------- DAY 3 -------------- */
                 temp = 0;
@@ -205,16 +209,17 @@ namespace WPWeather.ViewModels
                     DateTime dt = UnixTimeStampToDateTime(wd.dt);
                     if (day3.date.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
                     {
-                        temp += wd.main.temp_max;
+                        temp += wd.main.temp;
                         tempCount += 1;
                     }
                     else if (day3.date.CompareTo(dt) == -1)
                     {
+                        day3.TypeOfDay = weatherData.list[i - (tempCount / 2)].weather[0].description;
                         day3.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[i - (tempCount / 2)].weather[0].icon + ".png";
                         break;
                     }
                 }
-                day3.Temperature = String.Format("{0:00.0} °C", (temp / tempCount));
+                day3.Temperature = String.Format("avg. {0:00.0} °C", (temp / tempCount));
 
                 /* -------------- DAY 4 -------------- */
                 temp = 0;
@@ -229,18 +234,19 @@ namespace WPWeather.ViewModels
                     DateTime dt = UnixTimeStampToDateTime(wd.dt);
                     if (day4.date.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
                     {
-                        temp += wd.main.temp_max;
+                        temp += wd.main.temp;
                         tempCount += 1;
                     }
                     else if (day4.date.CompareTo(dt) == -1)
                     {
+                        day4.TypeOfDay = weatherData.list[i - (tempCount / 2)].weather[0].description;
                         day4.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[i - (tempCount / 2)].weather[0].icon + ".png";
                         break;
                     }
                 }
-                day4.Temperature = String.Format("{0:00.0} °C", (temp / tempCount));
+                day4.Temperature = String.Format("avg. {0:00.0} °C", (temp / tempCount));
 
-                /* -------------- DAY 4 -------------- */
+                /* -------------- DAY 5 -------------- */
                 temp = 0;
                 tempCount = 0;
 
@@ -253,16 +259,17 @@ namespace WPWeather.ViewModels
                     DateTime dt = UnixTimeStampToDateTime(wd.dt);
                     if (day5.date.ToString("yyyy-MM-dd").Equals(dt.ToString("yyyy-MM-dd")))
                     {
-                        temp += wd.main.temp_max;
+                        temp += wd.main.temp;
                         tempCount += 1;
                     }
                     else if (day5.date.CompareTo(dt) == -1)
                     {
+                        day5.TypeOfDay = weatherData.list[i - (tempCount / 2)].weather[0].description;
                         day5.TypeOfDayImagePath = "http://openweathermap.org/img/w/" + weatherData.list[i - (tempCount / 2)].weather[0].icon + ".png";
                         break;
                     }
                 }
-                day5.Temperature = String.Format("{0:00.0} °C", (temp / tempCount));
+                day5.Temperature = String.Format("avg. {0:00.0} °C", (temp / tempCount));
 
                 _wvm.DayViewModels[0] = day1;
                 _wvm.DayViewModels[1] = day2;
@@ -340,7 +347,7 @@ namespace WPWeather.ViewModels
         private string _bookmarkIcon = "";
 
         private object _content;
-        private HomepageViewModel _hvm = App.Current.Resources["HomepageViewModel"] as HomepageViewModel;
-        private WeatherViewModel _wvm = App.Current.Resources["WeatherViewModel"] as WeatherViewModel;
+        public static HomepageViewModel _hvm = App.Current.Resources["HomepageViewModel"] as HomepageViewModel;
+        public static WeatherViewModel _wvm = App.Current.Resources["WeatherViewModel"] as WeatherViewModel;
     }
 }

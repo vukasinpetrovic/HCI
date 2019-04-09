@@ -17,7 +17,9 @@
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding DayOfTheWeek}" FontFamily="Segoe UI Light" FontSize="16" Foreground="White" HorizontalAlignment="Center" />
         <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Source="{Binding TypeOfDayImagePath}"/>
-        <Label Grid.Row="2" Grid.Column="0" Content="{Binding Temperature}" FontFamily="Segoe UI Light" FontSize="28" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Viewbox Grid.Row="2" Grid.Column="0">
+            <Label Content="{Binding Temperature}" FontFamily="Segoe UI Light" FontSize="28" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Viewbox>
         <Viewbox Grid.Row="2" Grid.Column="1">
             <Label Content="{Binding TypeOfDay}" FontFamily="Segoe UI Light" FontSize="28" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Viewbox>

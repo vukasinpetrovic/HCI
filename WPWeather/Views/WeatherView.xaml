@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPWeather.Views"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:viewmodels="clr-namespace:WPWeather.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -79,27 +80,52 @@
         <Viewbox Grid.Row="2"
                  Grid.Column="0"
                  Margin="10">
-            <local:DayView DataContext="{Binding DayViewModels[0]}"/>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonUp" >
+                    <i:InvokeCommandAction Command="{Binding ClickOnDay}" CommandParameter="{Binding ElementName=Day1, Path=DataContext}"  />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <local:DayView x:Name="Day1" DataContext="{Binding DayViewModels[0]}"/>
         </Viewbox>
         <Viewbox Grid.Row="2"
                  Grid.Column="1"
                  Margin="10">
-            <local:DayView DataContext="{Binding DayViewModels[1]}"/>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonUp" >
+                    <i:InvokeCommandAction Command="{Binding ClickOnDay}" CommandParameter="{Binding ElementName=Day2, Path=DataContext}"  />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <local:DayView x:Name="Day2" DataContext="{Binding DayViewModels[1]}"/>
         </Viewbox>
         <Viewbox Grid.Row="2"
                  Grid.Column="2"
                  Margin="10">
-            <local:DayView DataContext="{Binding DayViewModels[2]}"/>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonUp" >
+                    <i:InvokeCommandAction Command="{Binding ClickOnDay}" CommandParameter="{Binding ElementName=Day3, Path=DataContext}"  />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <local:DayView x:Name="Day3" DataContext="{Binding DayViewModels[2]}"/>
         </Viewbox>
         <Viewbox Grid.Row="2"
                  Grid.Column="3"
                  Margin="10">
-            <local:DayView DataContext="{Binding DayViewModels[3]}"/>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonUp" >
+                    <i:InvokeCommandAction Command="{Binding ClickOnDay}" CommandParameter="{Binding ElementName=Day4, Path=DataContext}"  />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <local:DayView x:Name="Day4" DataContext="{Binding DayViewModels[3]}"/>
         </Viewbox>
         <Viewbox Grid.Row="2"
                  Grid.Column="4"
                  Margin="10">
-            <local:DayView DataContext="{Binding DayViewModels[4]}"/>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonUp" >
+                    <i:InvokeCommandAction Command="{Binding ClickOnDay}" CommandParameter="{Binding ElementName=Day5, Path=DataContext}"  />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <local:DayView x:Name="Day5" DataContext="{Binding DayViewModels[4]}"/>
         </Viewbox>
     </Grid>
 </UserControl>
